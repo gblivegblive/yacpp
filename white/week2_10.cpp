@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
       }
       std::cout << std::endl;
     } else if (operation == "NEXT") {
-      next_month = (current_month + 1) % 12;
+      next_month = current_month % 12 + 1;
       if (number_of_days[next_month] < number_of_days[current_month]) {
         for (size_t i=number_of_days[next_month]+1; i<=number_of_days[current_month]; i++) {
           diary[number_of_days[next_month]].insert(diary[i].begin(), diary[i].end());
