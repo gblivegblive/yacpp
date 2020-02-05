@@ -1,56 +1,62 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <unordered_set>
 
 int main(int argc, char *argv[])
 {
 
   size_t N;
   std::cin >> N;
-  std::string operation, param1, param2;
-  std::map<std::string, std::string> countries;
+  std::string operation;
+  std::map<std::string, std::unordered_set<std::string>> bus_to_stops;
+  std::map<std::string, std::unordered_set<std::string>> stop_to_buses;
 
   while (N-- > 0) {
     std::cin >> operation;
-    if (operation == "CHANGE_CAPITAL") {
-      std::cin >> param1 >> param2; // capital of country param1 is param2
-      if (countries.count(param1) == 0) {
-        std::cout << "Introduce new country " << param1 << " with capital " << param2 << "\n";
-        countries[param1] = param2;        
-      } else if (countries[param1] == param2) {
-        std::cout << "Country " << param1 << " hasn't changed its capital" << "\n";
-      } else {
-        std::cout << "Country "<< param1 << " has changed its capital from " << countries[param1] << " to "<< param2 << "\n";
-        countries[param1] = param2;        
+    if (operation == "NEW BUS") {
+      std::string bus;
+      size_t stop_count;
+      std::string stop_name;
+      std::cin >> bus >> stop_count; 
+      while (stop_count-- > 0) {
+        std::cin >> stop_name;
+        bus_to_stops[bus].insert(stop_name);
+        stop_to_buses[stop_name].insert(bus);
       }
-    } else if (operation == "RENAME") {
-      std::cin >> param1 >> param2;  // rename country from param1 to param2
-      if ((param1 == param2) || (countries.count(param1) == 0) ||
-          (countries.count(param2) == 1)) {
-        std::cout << "Incorrect rename, skip" << "\n";
-      } else {
-        std::cout << "Country " << param1 << " with capital " << countries[param1] << " has been renamed to " << param2 << "\n";
-        countries[param2] = countries[param1];  
-        countries.erase(param1);
-      }
-
-    } else if (operation == "ABOUT") {
-      std::cin >> param1;       // print capital of country param1
-      if (countries.count(param1) == 0) {
-        std::cout << "Country " << param1 << " doesn't exist" << "\n";
-      } else {
-        std::cout << "Country " << param1 << " has capital " << countries[param1] << "\n";        
-      }
-
-    } else if (operation == "DUMP") {
-      if (countries.size() == 0) {
-        std::cout << "There are no countries in the world" << "\n";
-      } else {
-        for (auto p : countries) {
-          std::cout << p.first << "/" << p.second << " ";
+    } else if (operation == "BUSES_FOR_STOP") {
+      std::string stop_name;
+      std::cin >> stop_name;
+      if (stop_to_buses.count(stop_name) == 1) {
+        for (const auto& bus : stop_to_buses[stop_name]) {
+          std::cout << bus << " ";
         }
-        std::cout << "\n";
+      } else {
+        std::cout << "No stop";        
       }
+      std::cout << "\n";      
+    } else if (operation == "STOPS_FOR_BUS") {
+      std::string bus;
+      std::cin >> bus;
+      if (stop_to_buses.count(stop_name) == 1) {
+        std::unordered_set<std::string> stops = bus_to_stops[bus];
+        stops.erase(bus);
+        if (not stops.empty()) {
+          for (const auto& stop : stops) {
+            std::cout << "Stop " << stop << ": ";
+            for (const auto& bus : stops) {
+          }
+        } else {
+          std::cout << "";
+        }
+
+      } else {
+        std::cout << "No bus";        
+      }
+      std::cout << "\n";      
+
+    } else if (operation == "ALL_BUSES") {
+
     }
     
   }
